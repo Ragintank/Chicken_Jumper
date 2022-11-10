@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
 	private Rigidbody playerRB;
+	public bool gameOver = false;
 
 	//Move
 	public float speed;
@@ -18,20 +20,43 @@ public class PlayerController : MonoBehaviour
 	public float fallMuliplier;
 	public float jumpForce;
 
+	//Score
+	public TextMeshProUGUI scoreText;
+	private int score = 0;
+	private int highScore = 0; //Will read high score that they have from save file
+	//Seed Count
+	public TextMeshProUGUI seedCountText;
+	private int seedCount = 0; //Will read how many seeds they have from a save file
+
 	void Start()
 	{
 		playerRB = GetComponent<Rigidbody>();
+		seedCountText.text = "Seeds: " + seedCount;
+		scoreText.text = "Score: " + score;
 	}
 	void Update()
 	{
 		Move();
 		Jump();
+		if (gameOver)
+		{
+			Debug.Log("Game Over");
+		}
 	}
 	private void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.CompareTag("Ground"))
 		{
 			isOnGround = true;
+		}
+	}
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("SeedCollectable"))
+		{
+			seedCount++;
+			seedCountText.text = "Seeds: " + seedCount;
+			Destroy(other.gameObject);
 		}
 	}
 	private void Jump()
@@ -76,7 +101,7 @@ public class PlayerController : MonoBehaviour
 	private void Move()
 	{
 		//Movement
-		Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, 0) * speed * Time.deltaTime;
+		Vector3 movement = speed * Time.deltaTime * new Vector3(Input.GetAxis("Horizontal"), 0, 0);
 		transform.Translate(movement, Space.World);
 
 		//Moving Character Rotation
@@ -84,6 +109,17 @@ public class PlayerController : MonoBehaviour
 		{
 			Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+		}
+
+		//Score
+		if (score < (int)transform.position.y)
+		{
+			score = (int)transform.position.y;
+			scoreText.text = "Score: " + score;
+		}
+		if (gameOver && highScore < score)
+		{
+			highScore = score;
 		}
 	}
 }

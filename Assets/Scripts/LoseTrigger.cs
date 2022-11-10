@@ -4,27 +4,30 @@ using UnityEngine;
 
 public class LoseTrigger : MonoBehaviour
 {
-	public Rigidbody playerRB;
-	private static float yOffset = -5;
-	private Vector3 offset = new Vector3(0, yOffset, 0);
+	private PlayerController playerControllerScript;
+	public Rigidbody target;
+	public Vector3 offset;
 
-	void Update()
+	void Start()
 	{
-		if (playerRB.velocity.y > 0)
+		playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+	}
+	private void Update()
+	{
+		if (target.velocity.y > 0.1)
 		{
-			transform.position = playerRB.position + offset;
+			transform.position = target.transform.position + offset;
 		}
-		DestroyPlatform();
 	}
 	private void OnTriggerEnter(Collider other)
 	{
-		Destroy(other.gameObject);
-	}
-	private void DestroyPlatform()
-	{
-		if (GameObject.FindGameObjectWithTag("Ground").transform.position.y < playerRB.position.y + yOffset)
+		if (other.CompareTag("Player"))
 		{
-			Destroy(GameObject.FindGameObjectWithTag("Ground"));
+			playerControllerScript.gameOver = true;
+		}
+		if (other.CompareTag("Ground") || other.CompareTag("SeedCollectable"))
+		{
+			Destroy(other.gameObject);
 		}
 	}
 }

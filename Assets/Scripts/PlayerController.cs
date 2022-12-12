@@ -6,6 +6,7 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
 	private Rigidbody playerRB;
+
 	public bool gameOver = false;
 
 	//Move
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
 	public TextMeshProUGUI scoreText;
 	private int score = 0;
 	private int highScore = 0; //Will read high score that they have from save file
+
 	//Seed Count
 	public TextMeshProUGUI seedCountText;
 	private int seedCount = 0; //Will read how many seeds they have from a save file

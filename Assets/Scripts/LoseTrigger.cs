@@ -14,6 +14,7 @@ public class LoseTrigger : MonoBehaviour
 	}
 	private void Update()
 	{
+		//LoseTrigger moves to under character when jumping up
 		if (target.velocity.y > 0.1)
 		{
 			transform.position = target.transform.position + offset;

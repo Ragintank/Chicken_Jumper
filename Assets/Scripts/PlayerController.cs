@@ -106,6 +106,15 @@ public class PlayerController : MonoBehaviour
 		Vector3 movement = speed * Time.deltaTime * new Vector3(Input.GetAxis("Horizontal"), 0, 0);
 		transform.Translate(movement, Space.World);
 
+		if (transform.position.x > 3.5f)
+		{
+			transform.position = new Vector3(3.5f, transform.position.y, transform.position.z);
+		}
+		if (transform.position.x < -3.5f)
+		{
+			transform.position = new Vector3(-3.5f, transform.position.y, transform.position.z);
+		}
+
 		//Moving Character Rotation
 		if (movement != Vector3.zero)
 		{
